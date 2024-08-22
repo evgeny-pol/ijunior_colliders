@@ -18,13 +18,14 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        _camera.fieldOfView -= Input.mouseScrollDelta.y * _zoomSensitivity;
+
         if (Input.GetMouseButton(1))
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             transform.RotateAround(_rotateAround, Vector3.up, Input.GetAxis(HorizontalMouseAxis) * _moveSensitivity);
             transform.RotateAround(_rotateAround, transform.right, Input.GetAxis(VerticalMouseAxis) * -_moveSensitivity);
-            _camera.fieldOfView -= Input.mouseScrollDelta.y * _zoomSensitivity;
         }
         else
         {
