@@ -6,6 +6,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _moveSensitivity = 1.0f;
     [SerializeField] private float _zoomSensitivity = 1.0f;
 
+    private const string HorizontalMouseAxis = "Mouse X";
+    private const string VerticalMouseAxis = "Mouse Y";
+
     private Camera _camera;
 
     private void Awake()
@@ -19,8 +22,8 @@ public class CameraController : MonoBehaviour
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            transform.RotateAround(_rotateAround, Vector3.up, Input.GetAxis("Mouse X") * _moveSensitivity);
-            transform.RotateAround(_rotateAround, transform.right, Input.GetAxis("Mouse Y") * -_moveSensitivity);
+            transform.RotateAround(_rotateAround, Vector3.up, Input.GetAxis(HorizontalMouseAxis) * _moveSensitivity);
+            transform.RotateAround(_rotateAround, transform.right, Input.GetAxis(VerticalMouseAxis) * -_moveSensitivity);
             _camera.fieldOfView -= Input.mouseScrollDelta.y * _zoomSensitivity;
         }
         else

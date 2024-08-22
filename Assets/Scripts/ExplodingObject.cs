@@ -2,7 +2,9 @@
 
 public class ExplodingObject : MonoBehaviour
 {
+    [Tooltip("Сила взрыва.")]
     [SerializeField] private float _explosionForce;
+    [Tooltip("Радиус взрыва.")]
     [SerializeField] private float _explosionRadius;
     [Tooltip("Минимальное количество создаваемых при взрыве объектов.")]
     [SerializeField, Min(0)] private int _newObjectsMin;
@@ -29,22 +31,29 @@ public class ExplodingObject : MonoBehaviour
 
     public void Explode()
     {
-        if (Random.value <= _newObjectsSpawnProbability)
-        {
-            var currentScale = transform.localScale;
-            var newScale = currentScale * _newObjectScaleCoeff;
-            var newSpawnProbability = _newObjectsSpawnProbability * _spawnProbabilityReduceCoeff;
-
-            for (var i = 0; i < Random.Range(_newObjectsMin, _newObjectsMax + 1); ++i)
-            {
-                var position = transform.position + currentScale.x * 0.5f * Random.onUnitSphere;
-                var newObject = Instantiate(_newObjectPrefab, position, Quaternion.identity);
-                newObject.transform.localScale = newScale;
-                newObject._newObjectsSpawnProbability = newSpawnProbability;
-                newObject.GetComponent<Rigidbody>().AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
-            }
-        }
-
+        TrySpawnObjects();
         Destroy(gameObject);
+    }
+
+    private void TrySpawnObjects()
+    {
+        var randomValue = Random.value;
+        Debug.Log($"Trying to spawn objects, random value: {randomValue}, spawn probability: {_newObjectsSpawnProbability}");
+        
+        if (randomValue > _newObjectsSpawnProbability)
+            return;
+
+        var currentScale = transform.localScale;
+        var newScale = currentScale * _newObjectScaleCoeff;
+        var newSpawnProbability = _newObjectsSpawnProbability * _spawnProbabilityReduceCoeff;
+
+        for (var i = 0; i < Random.Range(_newObjectsMin, _newObjectsMax + 1); ++i)
+        {
+            var position = transform.position + currentScale.x * 0.5f * Random.onUnitSphere;
+            var newObject = Instantiate(_newObjectPrefab, position, Quaternion.identity);
+            newObject.transform.localScale = newScale;
+            newObject._newObjectsSpawnProbability = newSpawnProbability;
+            newObject.GetComponent<Rigidbody>().AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
+        }
     }
 }
