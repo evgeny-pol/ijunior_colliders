@@ -1,27 +1,22 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Renderer))]
+[RequireComponent(typeof(Spawner))]
+[RequireComponent(typeof(Explosion))]
 public class ExplodingObject : MonoBehaviour
 {
-    [Tooltip("Сила взрыва.")]
-    [SerializeField] private float _explosionForce;
-    [Tooltip("Радиус взрыва.")]
-    [SerializeField] private float _explosionRadius;
-    [Tooltip("Минимальное количество создаваемых при взрыве объектов.")]
-    [SerializeField, Min(0)] private int _newObjectsMin;
-    [Tooltip("Максимальное количество создаваемых при взрыве объектов.")]
-    [SerializeField] private int _newObjectsMax;
-    [Tooltip("Коэффициент размера создаваемых при взрыве объектов")]
-    [SerializeField, Min(0.1f)] private float _newObjectScaleCoeff = 0.5f;
     [Tooltip("Вероятность создания объектов при взрыве")]
-    [SerializeField, Range(0.0f, 1.0f)] private float _newObjectsSpawnProbability = 1.0f;
+    [SerializeField, Range(0f, 1f)] private float _newObjectsSpawnProbability = 1f;
     [Tooltip("Коэффициент уменьшения вероятности создания объектов после взрыва.")]
-    [SerializeField, Min(0.0f)] private float _spawnProbabilityReduceCoeff = 0.5f;
-    [Tooltip("Префаб объекта создаваемого при взрыве")]
-    [SerializeField] private ExplodingObject _newObjectPrefab;
+    [SerializeField, Min(0f)] private float _spawnProbabilityReduceCoeff = 0.5f;
+    
+    private Spawner _spawner;
+    private Explosion _explosion;
 
-    private void OnValidate()
+    private void Awake()
     {
-        _newObjectsMax = Mathf.Max(_newObjectsMin, _newObjectsMax);
+        _spawner = GetComponent<Spawner>();
+        _explosion = GetComponent<Explosion>();
     }
 
     private void Start()
@@ -37,23 +32,20 @@ public class ExplodingObject : MonoBehaviour
 
     private void TrySpawnObjects()
     {
-        var randomValue = Random.value;
+        float randomValue = Random.value;
         Debug.Log($"Trying to spawn objects, random value: {randomValue}, spawn probability: {_newObjectsSpawnProbability}");
         
         if (randomValue > _newObjectsSpawnProbability)
             return;
 
-        var currentScale = transform.localScale;
-        var newScale = currentScale * _newObjectScaleCoeff;
-        var newSpawnProbability = _newObjectsSpawnProbability * _spawnProbabilityReduceCoeff;
+        GameObject[] newObjects = _spawner.Spawn(gameObject, transform.localScale.x * 0.5f);
+        float newSpawnProbability = _newObjectsSpawnProbability * _spawnProbabilityReduceCoeff;
 
-        for (var i = 0; i < Random.Range(_newObjectsMin, _newObjectsMax + 1); ++i)
+        foreach (GameObject newObject in newObjects)
         {
-            var position = transform.position + currentScale.x * 0.5f * Random.onUnitSphere;
-            var newObject = Instantiate(_newObjectPrefab, position, Quaternion.identity);
-            newObject.transform.localScale = newScale;
-            newObject._newObjectsSpawnProbability = newSpawnProbability;
-            newObject.GetComponent<Rigidbody>().AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
+            newObject.GetComponent<ExplodingObject>()._newObjectsSpawnProbability = newSpawnProbability;
         }
+
+        _explosion.Explode(newObjects);
     }
 }

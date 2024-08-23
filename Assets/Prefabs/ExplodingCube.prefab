@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8289327748305433449}
   - component: {fileID: 4654708482030639951}
+  - component: {fileID: 8670581244274237863}
+  - component: {fileID: 6801166243196655758}
   - component: {fileID: 4740995322047676587}
   - component: {fileID: 6565082007835322556}
   - component: {fileID: 2032711337165081221}
@@ -48,14 +50,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a70c305744c29914d91283ffe05343c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionForce: 2000
-  _explosionRadius: 10
+  _newObjectsSpawnProbability: 1
+  _spawnProbabilityReduceCoeff: 0.5
+  _spawner: {fileID: 8670581244274237863}
+  _explosion: {fileID: 6801166243196655758}
+--- !u!114 &8670581244274237863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079434632771809298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aed0768c9f93204593838911fc78f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _newObjectsMin: 2
   _newObjectsMax: 6
   _newObjectScaleCoeff: 0.5
-  _newObjectsSpawnProbability: 1
-  _spawnProbabilityReduceCoeff: 0.5
-  _newObjectPrefab: {fileID: 4654708482030639951}
+--- !u!114 &6801166243196655758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079434632771809298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbb42b842d812654da7cfc266513d4f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosionForce: 2000
+  _explosionRadius: 10
 --- !u!33 &4740995322047676587
 MeshFilter:
   m_ObjectHideFlags: 0

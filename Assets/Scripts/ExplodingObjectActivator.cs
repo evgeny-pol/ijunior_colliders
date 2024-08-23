@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ExplodingObjectActivator : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class ExplodingObjectActivator : MonoBehaviour
         if (!Input.GetMouseButtonUp(0))
             return;
 
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, _explodingObjectsLayer))
             return;

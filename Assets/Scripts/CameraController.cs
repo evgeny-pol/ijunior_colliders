@@ -1,15 +1,19 @@
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Vector3 _rotateAround;
-    [SerializeField] private float _moveSensitivity = 1.0f;
-    [SerializeField] private float _zoomSensitivity = 1.0f;
-
     private const string HorizontalMouseAxis = "Mouse X";
     private const string VerticalMouseAxis = "Mouse Y";
+    private const int SecondMouseButton = 1;
+
+    [SerializeField] private Vector3 _rotateAround;
+    [SerializeField] private float _moveSensitivity = 1f;
+    [SerializeField] private float _zoomSensitivity = 1f;
 
     private Camera _camera;
+
+    private bool IsRotating => Input.GetMouseButton(SecondMouseButton);
 
     private void Awake()
     {
@@ -20,7 +24,7 @@ public class CameraController : MonoBehaviour
     {
         _camera.fieldOfView -= Input.mouseScrollDelta.y * _zoomSensitivity;
 
-        if (Input.GetMouseButton(1))
+        if (IsRotating)
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
